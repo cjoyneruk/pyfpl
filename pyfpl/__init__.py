@@ -1,4 +1,4 @@
-from .config import get_config, set_config
+from .config import *
 from .objects import *
 
 __all__ = ['get_config',
