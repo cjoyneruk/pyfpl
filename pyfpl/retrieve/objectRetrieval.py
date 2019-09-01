@@ -2,10 +2,12 @@ import pandas as pd
 from pandas.io.json import json_normalize
 from .base import *
 import time
+from .base import _current_dir
+
 
 def current_gw():
 
-    gw_deadlines = pd.read_csv(current_dir + 'gameweek_deadlines.csv')
+    gw_deadlines = pd.read_csv(_current_dir() + 'gameweek_deadlines.csv')
     current_time = time.time()
     return gw_deadlines.loc[gw_deadlines['deadline_time_epoch']<current_time, 'GW'].values.max()
 
@@ -17,7 +19,7 @@ def next_deadline():
               'June', 'July', 'August', 'September', 'October',
               'November', 'December']
 
-    gw_deadlines = pd.read_csv(current_dir + 'gameweek_deadlines.csv')
+    gw_deadlines = pd.read_csv(_current_dir() + 'gameweek_deadlines.csv')
     gw = current_gw()
     t = datetime.datetime.fromtimestamp(gw_deadlines.loc[gw, 'deadline_time_epoch'])
 
@@ -43,7 +45,7 @@ def team_history(id_, gw=None):
     elif gw > current_gw():
         raise ValueError('The requested gameweek is not available yet')
 
-    filename = current_dir + 'team_history/' + str(id_) + '_' + 'GW-' + str(gw).zfill(2) + '.json'
+    filename = 'team_history/' + str(id_) + '_' + 'GW-' + str(gw).zfill(2) + '.json'
 
     try:
 
@@ -64,8 +66,8 @@ def gw_summary(gw=None):
     elif gw > current_gw():
         raise ValueError('The requested gameweek is not available yet')
 
-    filename = current_dir + 'gameweek_summary/summary_GW-' + str(gw).zfill(2) + '.json'
-    url = base_url + 'bootstrap-static/'
+    filename = 'gameweek_summary/summary_GW-' + str(gw).zfill(2) + '.json'
+    url = 'bootstrap-static/'
 
     if gw < current_gw():
 
@@ -101,8 +103,8 @@ def player_list(gw=None):
 
 def fixtures():
 
-    filename = current_dir + 'fixtures.json'
-    url = base_url + 'fixtures'
+    filename = 'fixtures.json'
+    url = 'fixtures'
 
     return json_daily_retrieve(filename, url)
 
@@ -110,28 +112,31 @@ def fixtures():
 
 def player(id_):
 
-    filename = current_dir + 'players/player_' + str(id_).zfill(3) + '.json'
+    filename = 'players/player_' + str(id_).zfill(3) + '.json'
 
     return file_retrieve(filename)
 
 
 def user_team(name):
 
+    settings = config.get_settings()
     user = name + '_DETAILS'
     details = settings[user]
 
-    filename = current_dir + 'user_teams/' + name + '_' + str(details['TEAMID']) + '.json'
-    url = base_url + 'my-team/' + str(details['TEAMID']) + '/'
+    filename = 'user_teams/' + name + '_' + str(details['TEAMID']) + '.json'
+    url = 'my-team/' + str(details['TEAMID']) + '/'
 
-    return json_daily_retrieve(filename, url, email=details['EMAIL'], pswd=details['PWD'])
+    return json_daily_retrieve(filename, url, email=details['EMAIL'], pwd=details['PWD'])
 
 
 def league(name, league_id):
 
+    settings = config.get_settings()
+
     user = name + '_details'
     details = settings[user]
 
-    filename = current_dir + 'league_standings/' + str(league_id) + '.json'
-    url = base_url + 'leagues-classic/' + str(league_id) + '/standings/'
+    filename = 'league_standings/' + str(league_id) + '.json'
+    url = 'leagues-classic/' + str(league_id) + '/standings/'
 
-    return json_daily_retrieve(filename, url, email=details['EMAIL'], pswd=details['PWD'])
+    return json_daily_retrieve(filename, url, email=details['EMAIL'], pwd=details['PWD'])
