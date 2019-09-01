@@ -222,9 +222,9 @@ for ind in predictions.index:
 
     print('{:.1f}% - complete'.format(100*ind/N))
 
-transfers.to_csv('chris_transfers.csv',index=False)
-teaminfo.to_csv('chris_teaminfo.csv', index=False)
-teamselection.to_csv('chris_selection.csv', index=False)
+transfers.to_csv('transfers.csv',index=False)
+teaminfo.to_csv('teaminfo.csv', index=False)
+teamselection.to_csv('selection.csv', index=False)
 
 
 #tot_return = teamReturn(teaminfo, 6, 0.6)
