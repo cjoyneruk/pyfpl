@@ -3,7 +3,7 @@ from .dataUpdates import *
 import pyfpl as fpl
 from datetime import date
 import numpy as np
-
+from .base import _current_dir
 
 
 def __applymatchnumbering(matchlist):
@@ -36,7 +36,7 @@ def __applyELO(fixs, all_fix):
     c = 0.3 # - home advantage
 
     # - Get initial ELO data
-    filename = current_dir + 'ELO_init.csv'
+    filename = _current_dir() + 'ELO_init.csv'
     ELO_init = pd.read_csv(filename).set_index('clubid')
 
     # - Order club matches by index
@@ -121,7 +121,7 @@ def updateSeasonData():
     seasondata = seasondata.merge(playersummary, on=['id','matchid'], how='left')
 
     print('Saving...')
-    filename = current_dir + 'seasonData.csv'
+    filename = _current_dir() + 'seasonData.csv'
     seasondata.to_csv(filename, index=False)
 
     print('Complete.')

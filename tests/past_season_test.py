@@ -10,7 +10,7 @@ sd = datasets.seasonData(season=2018, cols=cols)
 # - Construct baseline: If started previous game and available then predict start, otherwise not
 
 # - Create started column
-sd['start'] = (True^sd['was_sub'])&sd['in_squad']
+sd['start'] = (True ^ sd['was_sub']) & sd['in_squad']
 
 # - Create started previous game column
 alt_df = sd[['element', 'match_no', 'start']]
@@ -25,7 +25,7 @@ sd = sd.reset_index(drop=True)
 X = sd[['start_prev', 'status']]
 y = sd['start']
 
-y_pred = X['start_prev']&(X['status']=='a')
+y_pred = X['start_prev'] & (X['status'] == 'a')
 
 n = y.shape[0]
 n_c = sum(y==y_pred)

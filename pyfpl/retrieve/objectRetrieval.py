@@ -133,7 +133,7 @@ def league(name, league_id):
 
     settings = config.get_settings()
 
-    user = name + '_details'
+    user = name + '_DETAILS'
     details = settings[user]
 
     filename = 'league_standings/' + str(league_id) + '.json'

@@ -7,8 +7,8 @@ def update_team_history(id_, gw=None):
     if gw is None:
 
         print('Updating gameweek {}'.format(cgw))
-        filename = current_dir + 'team_history/' + str(id_) + '_' + 'GW-' + str(cgw).zfill(2) + '.json'
-        url = base_url + 'entry/' + str(id_) + '/event/' + str(cgw) + '/picks/'
+        filename = 'team_history/' + str(id_) + '_' + 'GW-' + str(cgw).zfill(2) + '.json'
+        url = 'entry/' + str(id_) + '/event/' + str(cgw) + '/picks/'
         json_data = web_retrieve(url)
         file_save(json_data, filename)
 
@@ -20,8 +20,8 @@ def update_team_history(id_, gw=None):
 
             for x in range(1, cgw+1):
                 print('Updating gameweek {}'.format(x))
-                filename = current_dir + 'team_history/' + str(id_) + '_' + 'GW-' + str(x).zfill(2) + '.json'
-                url = base_url + 'entry/' + str(id_) + '/event/' + str(x) + '/picks/'
+                filename = 'team_history/' + str(id_) + '_' + 'GW-' + str(x).zfill(2) + '.json'
+                url = 'entry/' + str(id_) + '/event/' + str(x) + '/picks/'
                 json_data = web_retrieve(url)
                 file_save(json_data, filename)
 
@@ -33,8 +33,8 @@ def update_team_history(id_, gw=None):
 
         else:
             print('Updating gameweek {}'.format(gw))
-            filename = current_dir + 'team_history/' + str(id_) + '_' + 'GW-' + str(gw).zfill(2) + '.json'
-            url = base_url + 'entry/' + str(id_) + '/event/' + str(gw) + '/picks/'
+            filename = 'team_history/' + str(id_) + '_' + 'GW-' + str(gw).zfill(2) + '.json'
+            url = 'entry/' + str(id_) + '/event/' + str(gw) + '/picks/'
             json_data = web_retrieve(url)
             file_save(json_data, filename)
 
@@ -49,8 +49,8 @@ def update_player_info():
         name, id_ = pl.loc[ind, ['web_name', 'id']]
         print('[{:.1f}%] {} ({})'.format(100*i/N, name, id_))
 
-        url = base_url + 'element-summary/' + str(id_) + '/'
-        filename = current_dir + 'players/player_' + str(id_).zfill(3) + '.json'
+        url = 'element-summary/' + str(id_) + '/'
+        filename = 'players/player_' + str(id_).zfill(3) + '.json'
 
         jsonResponse = web_retrieve(url)
 
