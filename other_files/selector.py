@@ -15,7 +15,7 @@ def teamCheck(teaminfo):
 
 def teamSelector(teamlist, n_weeks):
 
-    col_headings = ['GW+{}'.format(i) for i in range(0, n_weeks)]
+    col_headings = ['GW+{}'.format(i+1) for i in range(0, n_weeks)]
 
     formations = [[3, 4, 3], [3, 5, 2], [4, 3, 3], [4, 4, 2], [4, 5, 1], [5, 3, 2], [5, 4, 1]]
 
@@ -51,7 +51,7 @@ def teamSelector(teamlist, n_weeks):
 
 def teamReturn(teamlist, n_weeks, weighting=0.8):
 
-    col_headings = ['GW+{}'.format(i) for i in range(0, n_weeks)]
+    col_headings = ['GW+{}'.format(i+1) for i in range(0, n_weeks)]
 
     formations = [[3, 4, 3], [3, 5, 2], [4, 3, 3], [4, 4, 2], [4, 5, 1], [5, 3, 2], [5, 4, 1]]
 
@@ -101,21 +101,19 @@ def Transfer(pred, team):
     return teamlist, inds
 
 
-myteam = fpl.CurrentTeam(retrieve.user_team('user1'))
+myteam = fpl.CurrentTeam(retrieve.user_team('chris'))
 
-cgw = 3
+cgw = retrieve.current_gw()
 n_weeks = 6
 
 balance = myteam.transfers.loc[0, 'bank']
 
-plist = retrieve.player_list(gw=cgw-1)
+plist = retrieve.player_list(gw=cgw)
 
-player = fpl.Player(retrieve.player(123))
 
 df = datasets.gameweekPrediction()
 
-
-df = df[df['GW']<(cgw+n_weeks)]
+df = df[df['GW']<(cgw+n_weeks+1)]
 predictions = df.pivot(index='id', columns='GW', values='predicted_points_scored').reset_index()
 
 
@@ -126,19 +124,23 @@ predictions = predictions.rename(columns={'team': 'clubid',
                                           'now_cost': 'value',
                                           'web_name': 'name'})
 
-r = np.arange(cgw, cgw+n_weeks, dtype=int)
-GW_cols = ['GW+{}'.format(i) for i in range(0,n_weeks)]
+r = np.arange(cgw+1, cgw+n_weeks+1, dtype=int)
+GW_cols = ['GW+{}'.format(i+1) for i in range(0,n_weeks)]
 predictions = predictions.rename(columns=dict(zip(r,GW_cols)))
 
-teaminfo = team_chris.essential
-teaminfo = teaminfo.merge(predictions[['id', 'name']+ GW_cols], on='id', how='left')
+teaminfo = myteam.essential
+teaminfo = teaminfo.merge(predictions[['id', 'name'] + GW_cols], on='id', how='left')
 teaminfo = teaminfo.rename(columns={'selling_price': 'value'})
 teaminfo = teaminfo.sort_values(by='position').reset_index(drop=True)
 predictions = predictions[teaminfo.columns]
 
+predictions.to_csv('prediction.csv')
+
 drop_inds = predictions[predictions['position'].isna()].index
 predictions = predictions.drop(drop_inds)
 predictions[['clubid', 'position', 'value']] = predictions[['clubid', 'position', 'value']].astype(int)
+
+
 
 team_ids = teaminfo['id'].values
 inds = predictions[predictions['id'].isin(team_ids)].index
@@ -148,6 +150,7 @@ predictions['tot_return'] = predictions[GW_cols].sum(axis=1)
 drop_inds = predictions[predictions['tot_return']<3].index
 predictions = predictions.drop(drop_inds)
 predictions = predictions.reset_index(drop=True)
+
 
 max_prices = np.array([teaminfo.loc[teaminfo['position']==i,'value'].max() for i in range(1,5)]) + balance
 
@@ -164,8 +167,6 @@ position_locs = [[0,1], [2,3,4,5,6], [7,8,9,10,11], [12,13,14]]
 current_return = teamReturn(teaminfo, n_weeks=6, weighting=0.5)
 teamselection = teamSelector(teaminfo, n_weeks=6)
 
-#j = 10
-#predictions = predictions[predictions['position']==3]
 N = predictions.shape[0]
 
 transfers = pd.DataFrame([], columns=['player_out', 'player_in', 'player_cost', 'transfer_cost', 'points_gain'])
@@ -214,7 +215,7 @@ for ind in predictions.index:
             if teamCheck(teaminfo):
 
                 alt_return = teamReturn(teaminfo, n_weeks=6, weighting=0.5)
-                if alt_return>current_return+2:
+                if alt_return>current_return+0.5:
                     transfers.loc[transfers.shape[0]] = [temp['name'], teaminfo.loc[j, 'name'],
                                                          val_in, val_in-val_out, alt_return-current_return]
                     print('{} -> {} [{:.1f}]'.format(temp['name'], teaminfo.loc[j,'name'], alt_return-current_return))
@@ -227,5 +228,5 @@ teaminfo.to_csv('teaminfo.csv', index=False)
 teamselection.to_csv('selection.csv', index=False)
 
 
-#tot_return = teamReturn(teaminfo, 6, 0.6)
+tot_return = teamReturn(teaminfo, 6, 0.6)
 
