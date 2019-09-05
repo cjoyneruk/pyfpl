@@ -1,5 +1,4 @@
 from pyfpl import datasets
-import numpy as np
 
 cols = ['element', 'clubid', 'matchid', 'GW', 'was_sub',
        'in_squad', 'minutes',  'web_name', 'value', 'match_no',
