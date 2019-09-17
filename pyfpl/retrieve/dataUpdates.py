@@ -1,4 +1,5 @@
 from .objectRetrieval import *
+from .base import _current_dir
 
 def update_team_history(id_, gw=None):
 
@@ -58,3 +59,9 @@ def update_player_info():
             raise ValueError('{} is not returning any data, try again later'.format(url))
         file_save(jsonResponse, filename)
         time.sleep(1)
+
+def add_new_predictions(df, gw):
+
+    filename = _current_dir() + 'Predictions/GW' + str(gw) + '_predictions.csv'
+
+    df.to_csv(filename, index=False)

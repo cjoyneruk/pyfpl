@@ -21,9 +21,15 @@ def gameweekPrediction(gw=None):
     if gw is None:
         gw = current_gw()
 
-    filename = _current_dir() + 'GW' + str(gw+1) + '_predictions.csv'
+    filename = _current_dir() + 'Predictions/GW' + str(gw) + '_predictions.csv'
 
     return pd.read_csv(filename)
+
+def playerHistories(season=2018, cols=None):
+
+    filename = _historic_dir() + str(season) + '-' + str(season-1999) + '/player_histories.csv'
+
+    return pd.read_csv(filename, usecols=cols)
 
 def seasonData(season=2018, cols=None):
 

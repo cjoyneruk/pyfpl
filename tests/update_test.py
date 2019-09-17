@@ -19,7 +19,7 @@ more_info = my_team.picks
 print(more_info)
 
 # - Get league information for user
-league_id = 101
+league_id = 'something'
 league = fpl.League(retrieve.league('user', league_id))
 print(league)
 
