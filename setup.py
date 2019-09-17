@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyfpl",
-    version="0.1",
+    version="0.1.1",
     author="C. H. Joyner",
     author_email="c.joyner.uk@gmail.com",
     description="python api for fantasy.premierleague.com",

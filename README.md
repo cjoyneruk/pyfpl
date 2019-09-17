@@ -1,4 +1,4 @@
-# pyfpl (v0.1)
+# pyfpl (v0.1.1)
 
 A python package to interact with the fantasy premier league API, to analyse player statics and help make points predictions
 
