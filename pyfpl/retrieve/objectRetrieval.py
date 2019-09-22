@@ -12,7 +12,7 @@ def current_gw():
     return gw_deadlines.loc[gw_deadlines['deadline_time_epoch']<current_time, 'GW'].values.max()
 
 
-def next_deadline():
+def next_deadline(gw=None):
 
     days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     months = ['January', 'February', 'March', 'April', 'May',
@@ -20,7 +20,9 @@ def next_deadline():
               'November', 'December']
 
     gw_deadlines = pd.read_csv(_current_dir() + 'gameweek_deadlines.csv')
-    gw = current_gw()
+    if gw is None:
+        gw = current_gw()
+
     t = datetime.datetime.fromtimestamp(gw_deadlines.loc[gw, 'deadline_time_epoch'])
 
     date_string = days[t.weekday()] + ' ' + str(t.day)
@@ -35,7 +37,7 @@ def next_deadline():
 
     date_string += months[t.month-1] + ' - ' + str(t.hour) + ':' + str(t.minute).zfill(2)
 
-    print(date_string)
+    return date_string
 
 
 def team_history(id_, gw=None):
